@@ -1,3 +1,4 @@
 /target
 flake.nix
 flake.lock
+test.txt
