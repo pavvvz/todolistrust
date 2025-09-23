@@ -19,23 +19,24 @@ fn delete_line(path: &str, line_number: usize) -> io::Result<()> {
     let mut lines: Vec<String> = read_lines(path)?; //the result of read_lines is assigned to lines (which is a vector of strings)
 
     if line_number == 0 || line_number > lines.len() {
+        //checks
         eprintln!("Invalid line number {}", line_number);
         return Ok(());
     }
 
-    lines.remove(line_number - 1); // 1-based index for user
+    lines.remove(line_number - 1); // removes the line from the vector
 
-    let mut file = OpenOptions::new().write(true).truncate(true).open(path)?;
+    let mut file = OpenOptions::new().write(true).truncate(true).open(path)?;  //opens the file in write mode, deleting everything inside
 
     for l in lines {
         writeln!(file, "{}", l)?;
-    }
+    } //writes every line
 
     Ok(())
 }
 
 fn main() -> io::Result<()> {
-    let path = "notes.txt";
+    let path = "test.txt";
 
     // Read
     println!("Initial file:");
@@ -46,8 +47,8 @@ fn main() -> io::Result<()> {
     }
 
     // Add new line
-    add_line(path, "Hello, Rust!")?;
-    add_line(path, "Another row")?;
+    //add_line(path, "Hello, Rust!")?;
+    //add_line(path, "Another row")?;
 
     // Delete row 1
     delete_line(path, 1)?;
