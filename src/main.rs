@@ -36,29 +36,44 @@ fn delete_line(path: &str, line_number: usize) -> io::Result<()> {
 }
 
 fn main() -> io::Result<()> {
-    let path = "test.txt";
+    let path = "test.txt"; //since this is defined here it has no need to be mutable
 
-    // Read
-    println!("Initial file:");
-    if let Ok(lines) = read_lines(path) {
+    let mut flag = true;
+    while flag {
+        let lines = read_lines(path)?;
         for (i, line) in lines.iter().enumerate() {
             println!("{}: {}", i + 1, line);
         }
-    }
+        println!("Choose an option: (1) Add line (2) Delete line (3) Exit ");
+        let mut choice = String::new();
+        io::stdin().read_line(&mut choice)?;
 
-    // Add new line
-    //add_line(path, "Hello, Rust!")?;
-    //add_line(path, "Another row")?;
-
-    // Delete row 1
-    delete_line(path, 1)?;
-
-    println!("\nAfter modifications:");
-    if let Ok(lines) = read_lines(path) {
-        for (i, line) in lines.iter().enumerate() {
-            println!("{}: {}", i + 1, line);
+        match choice.trim() {
+            
+            "1" => {
+                println!("Enter the line to add:");
+                let mut new_line = String::new();
+                io::stdin().read_line(&mut new_line)?;
+                add_line(path, new_line.trim())?;
+            }
+            "2" => {
+                println!("Enter the line number to delete:");
+                let mut line_number = String::new();
+                io::stdin().read_line(&mut line_number)?;
+                if let Ok(num) = line_number.trim().parse::<usize>() {
+                    delete_line(path, num)?;
+                } else {
+                    eprintln!("Please enter a valid number.");
+                }
+            }
+            "3" => {
+                flag = false;
+            }
+            _ => {
+                eprintln!("Invalid option. Please try again.");
+            }
         }
+        
     }
-
     Ok(())
 }
